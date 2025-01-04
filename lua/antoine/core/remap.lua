@@ -1,10 +1,31 @@
 vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 local keymap = vim.keymap
 
---keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "open netrw with <leader>pv" })
+-- For conciseness
+local opts = { noremap = true, silent = true }
+
+-- Disable the spacebar key's default behavior in Normal and Visual modes
+keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clears the search result highlights" })
+keymap.set("n", "x", '"_x', { desc = "Delete single character without copying into register" })
+
+-- Vertical scroll and center
+keymap.set("n", "<C-d>", "<C-d>zz", opts)
+keymap.set("n", "<C-u>", "<C-u>zz", opts)
+
+-- Find and center
+keymap.set("n", "n", "nzzzv")
+keymap.set("n", "N", "Nzzzv")
+
+-- Keep last yanked when pasting
+keymap.set("v", "p", '"_dP', opts)
+
+-- Toggle line wrapping
+keymap.set("n", "<leader>lw", "<cmd>set wrap!<CR>", { desc = "Toggle line wrapping", noremap = true, silent = true })
 
 -- increment/decrement numbers
 keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
@@ -23,6 +44,3 @@ keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" 
 keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" })
 keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
-
--- text selection
-keymap.set("", "<C-a>", "<esc>ggVG<CR>", { desc = "Select all text" })
