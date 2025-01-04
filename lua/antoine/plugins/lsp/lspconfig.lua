@@ -7,6 +7,7 @@ return {
 		{ "folke/neodev.nvim", opts = {} },
 	},
 	opts = {
+		autoformat = false, -- Autoformatting is handled by conform.nvim plugin
 		setup = {
 			rust_analyzer = function()
 				return true

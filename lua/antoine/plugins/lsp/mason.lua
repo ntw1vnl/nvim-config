@@ -27,6 +27,7 @@ return {
 				"black",
 				"pylint",
 				"clang-format",
+				"xmlformatter",
 			},
 		})
 	end,
