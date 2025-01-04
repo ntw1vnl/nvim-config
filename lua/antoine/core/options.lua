@@ -10,12 +10,14 @@ opt.tabstop = 4 -- 4 spaces for tabs
 opt.shiftwidth = 4 -- 4 spaces for indent width
 opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent of current line when starting new one
+
+-- Folding
 opt.foldenable = false
 
+-- Wrapping
 opt.wrap = false -- do not wrap by default, can be toogled with a keybind (see remap.lua)
 opt.linebreak = true -- wrap at word rather than last displayable character
 opt.whichwrap = "bs<>[]hl" -- Which "horizontal" keys are allowed to travel to prev/next line (default: 'b,s')
-
 -- TODO check why it is not working
 opt.formatoptions:remove({ "c", "r", "o" }) -- Don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode. (default: 'croql')
 
