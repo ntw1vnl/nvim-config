@@ -12,7 +12,8 @@ opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent of current line when starting new one
 opt.foldenable = false
 
-opt.wrap = false
+opt.wrap = false -- do not wrap by default, can be toogled with a keybind (see remap.lua)
+opt.linebreak = true -- wrap at word rather than last displayable character
 opt.whichwrap = "bs<>[]hl" -- Which "horizontal" keys are allowed to travel to prev/next line (default: 'b,s')
 
 -- TODO check why it is not working
