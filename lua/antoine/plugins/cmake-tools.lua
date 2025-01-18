@@ -2,10 +2,11 @@ return {
 	"Civitasv/cmake-tools.nvim",
 	dependencies = { "nvim-lua/plenary.nvim" },
 	config = function()
-		local cmake_tools = require("cmake-tools")
-		cmake_tools.setup({
+		local osys = require("cmake-tools.osys")
+		require("cmake-tools").setup({
 			cmake_command = "cmake", -- this is used to specify cmake command path
 			ctest_command = "ctest", -- this is used to specify ctest command path
+			cmake_use_preset = true,
 			cmake_regenerate_on_save = true, -- auto generate when save CMakeLists.txt
 			cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" }, -- this will be passed when invoke `CMakeGenerate`
 			cmake_build_options = {}, -- this will be passed when invoke `CMakeBuild`
@@ -13,8 +14,15 @@ return {
 			--       ${kit}
 			--       ${kitGenerator}
 			--       ${variant:xx}
-			cmake_build_directory = "out/${variant:buildType}", -- this is used to specify generate directory for cmake, allows macro expansion, relative to vim.loop.cwd()
-			cmake_soft_link_compile_commands = true, -- this will automatically make a soft link from compile commands file to project root dir
+			cmake_build_directory = function()
+				if osys.iswin32 then
+					return "out\\${variant:buildType}"
+				end
+				return "out/${variant:buildType}"
+			end, -- this is used to specify generate directory for cmake, allows macro expansion, can be a string or a function returning the string, relative to cwd.
+			cmake_soft_link_compile_commands = function()
+				return not osys.iswin32 -- do not create simlink for compile commands file on windows (needs admin right to do so)
+			end, -- this will automatically make a soft link from compile commands file to project root dir
 			cmake_compile_commands_from_lsp = false, -- this will automatically set compile commands file location using lsp, to use it, please set `cmake_soft_link_compile_commands` to false
 			cmake_kits_path = nil, -- this is used to specify global cmake kits path, see CMakeKits for detailed usage
 			cmake_variants_message = {
@@ -44,6 +52,7 @@ return {
 						direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
 						close_on_exit = false, -- whether close the terminal when exit
 						auto_scroll = true, -- whether auto scroll to the bottom
+						singleton = true, -- single instance, autocloses the opened one, if present
 					},
 					overseer = {
 						new_task_opts = {
@@ -68,6 +77,7 @@ return {
 						single_terminal_per_instance = true, -- Single viewport, multiple windows
 						single_terminal_per_tab = true, -- Single viewport per tab
 						keep_terminal_static_location = true, -- Static location of the viewport if avialable
+						auto_resize = true, -- Resize the terminal if it already exists
 
 						-- Running Tasks
 						start_insert = false, -- If you want to enter terminal with :startinsert upon using :CMakeRun
@@ -91,6 +101,7 @@ return {
 						direction = "float", -- 'vertical' | 'horizontal' | 'tab' | 'float'
 						close_on_exit = false, -- whether close the terminal when exit
 						auto_scroll = true, -- whether auto scroll to the bottom
+						singleton = true, -- single instance, autocloses the opened one, if present
 					},
 					overseer = {
 						new_task_opts = {
@@ -113,6 +124,7 @@ return {
 						single_terminal_per_instance = true, -- Single viewport, multiple windows
 						single_terminal_per_tab = true, -- Single viewport per tab
 						keep_terminal_static_location = true, -- Static location of the viewport if avialable
+						auto_resize = true, -- Resize the terminal if it already exists
 
 						-- Running Tasks
 						start_insert = false, -- If you want to enter terminal with :startinsert upon using :CMakeRun
@@ -127,6 +139,19 @@ return {
 				spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }, -- icons used for progress display
 				refresh_rate_ms = 100, -- how often to iterate icons
 			},
+			cmake_virtual_text_support = true, -- Show the target related to current file using virtual text (at right corner)
 		})
+
+		local keymap = vim.keymap
+		keymap.set("n", "<leader>cc", "<cmd>CMakeGenerate<CR>", { desc = "Generate current CMake project" })
+		keymap.set("n", "<leader>cb", "<cmd>CMakeBuild<CR>", { desc = "Build current CMake project" })
+		keymap.set("n", "<leader>cr", "<cmd>CMakeRun<CR>", { desc = "Run current CMake project" })
+		keymap.set(
+			"n",
+			"<leader>ct",
+			"<cmd>CMakeRunTest --output-on-failure<CR>",
+			{ desc = "Run current CMake project test" }
+		)
+		keymap.set("n", "<leader>cs", "<cmd>CMakeSettings<CR>", { desc = "Open CMake settings" })
 	end,
 }
