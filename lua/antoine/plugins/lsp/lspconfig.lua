@@ -89,9 +89,14 @@ return {
 			end,
 			["clangd"] = function()
 				lspconfig["clangd"].setup({
+					cmd = {
+						"clangd",
+						"--background-index",
+						"--clang-tidy",
+					},
 					on_attach = function(client, bufnr)
 						client.server_capabilities.signatureHelpProvider = false
-						on_attach(client, bufnr)
+						keymap.set("n", "<leader>gg", "<cmd>ClangdSwitchSourceHeader<CR>", { silent = true })
 					end,
 					capabilities = capabilities,
 				})
