@@ -24,6 +24,9 @@ keymap.set("n", "N", "Nzzzv")
 -- Keep last yanked when pasting
 keymap.set("v", "p", '"_dP', opts)
 
+-- Yank to end of line
+keymap.set("n", "Y", "y$")
+
 -- Toggle line wrapping
 keymap.set("n", "<leader>lw", "<cmd>set wrap!<CR>", { desc = "Toggle line wrapping", noremap = true, silent = true })
 
