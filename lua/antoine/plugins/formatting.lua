@@ -1,10 +1,11 @@
+-- Use :ConformInfo command to view info about formatters
 return {
 	"stevearc/conform.nvim",
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		local conform = require("conform")
-
 		conform.setup({
+			-- log-level = vim.log.levels.DEBUG
 			formatters_by_ft = {
 				javascript = { "prettier" },
 				json = { "prettier" },
@@ -14,8 +15,9 @@ return {
 				html = { "prettier" },
 				lua = { "stylua" },
 				python = { "isort", "black" },
-				xml = { "xmllint" },
-				gpx = { "xmllint" },
+				xml = { "xmlformatter" },
+				gpx = { "xmlformatter" },
+				cmake = { "cmake_format" },
 			},
 			format_on_save = function(bufnr)
 				-- Disable with a global or buffer-local variable
@@ -25,6 +27,12 @@ return {
 				return { timeout_ms = 500, lsp_format = "fallback" }
 			end,
 		})
+
+		conform.formatters.xmlformatter = {
+			prepend_args = function(self, ctx)
+				return { "--selfclose" }
+			end,
+		}
 
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()
 			conform.format({
