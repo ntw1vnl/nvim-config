@@ -35,8 +35,8 @@ return {
 		keymap.set("n", "<leader>fc", builtin.grep_string, { desc = "Find string under cursor in cwd" })
 		keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find open buffers" })
 		keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
-		keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find TODO comments" })
 		keymap.set("n", "<leader>fo", builtin.current_buffer_fuzzy_find, { desc = "Find in current buffer" })
 		keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps" })
+		keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find TODO comments" })
 	end,
 }
